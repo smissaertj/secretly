@@ -1,4 +1,6 @@
-from app import app, helpers, models
+import datetime
+
+from app import app, db, helpers, models
 from flask import request, make_response, jsonify
 
 @app.route('/api/new_message', methods=['POST'])
@@ -81,8 +83,16 @@ def read_message():
 
             retrieved_msg = models.Message.query.filter_by(uuid=uuid).first()
 
-            # Return the message if it exists and the password matches the hashed password
-            if retrieved_msg != None and helpers.verify_password(retrieved_msg.passwd_hash, password):
+            # Return the message if it exists, was not opened before and the password matches the hashed password
+            if retrieved_msg != None and \
+                    retrieved_msg.is_read != True and \
+                    helpers.verify_password(retrieved_msg.passwd_hash, password):
+                # Mark the message as read
+                retrieved_msg.is_read = True
+                retrieved_msg.read_date = datetime.datetime.now()
+                db.session.add(retrieved_msg)
+                db.session.commit()
+
                 response = make_response(
                     jsonify(
                         {
@@ -90,7 +100,7 @@ def read_message():
                             'severity': 'success'
                          },
                     ),
-                    401
+                    200
                 )
                 return response
             else:
