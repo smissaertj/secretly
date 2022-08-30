@@ -25,9 +25,9 @@ def new_message():
             # Send email with message.uuid
             sg_response = helpers.send_mail(to_email, new_message.uuid)
             if sg_response:
-                return helpers.json_response(f'Email sent!', 'success', 200, msg_uuid=new_message.uuid)
+                return helpers.json_response('Email sent!', 'success', 200, msg_uuid=new_message.uuid)
             else:
-                return helpers.json_response(f'Error sending email', 'error', 500, msg_uuid=new_message.uuid)
+                return helpers.json_response('Error sending email', 'error', 500, msg_uuid=new_message.uuid)
         else:
             return helpers.json_response('Content-Type should be application/json', 'error', 400)
 
