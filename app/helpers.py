@@ -2,7 +2,23 @@ import sendgrid
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 from decouple import config
+from flask import make_response, jsonify
 from sendgrid.helpers.mail import Mail, Email, To, Content
+
+# Generate JSON responses
+def json_response(response_msg, severity, status_code, msg_uuid=None):
+    response = make_response(
+        jsonify(
+            {
+                'response_msg': response_msg,
+                'severity': severity,
+                'msg_uuid': msg_uuid
+            }
+        ),
+        status_code
+    )
+    return response
+
 
 # Password verification
 def hash_password(password):

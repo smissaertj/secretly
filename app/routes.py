@@ -25,51 +25,14 @@ def new_message():
             # Send email with message.uuid
             sg_response = helpers.send_mail(to_email, new_message.uuid)
             if sg_response:
-                response = make_response(
-                    jsonify(
-                        {
-                            'response_msg': 'Email sent!',
-                            'severity': 'success',
-                            'msg_uuid': new_message.uuid
-                         }
-                    ),
-                    200
-                )
-                return response
+                return helpers.json_response(f'Email sent!', 'success', 200, msg_uuid=new_message.uuid)
             else:
-                response = make_response(
-                    jsonify(
-                        {
-                            'response_msg': 'Error sending email. You may want to deliver the UUID yourself :(',
-                            'severity': 'error',
-                            'msg_uuid': new_message.uuid
-                        }
-                    ),
-                    500
-                )
-                return response
+                return helpers.json_response(f'Error sending email', 'error', 500, msg_uuid=new_message.uuid)
         else:
-            response = make_response(
-                jsonify(
-                    {
-                        'response_msg': 'Content-Type should be application/json',
-                        'severity': 'error'
-                     },
-                ),
-                400
-            )
-            return response
+            return helpers.json_response('Content-Type should be application/json', 'error', 400)
+
     except KeyError:
-        response = make_response(
-            jsonify(
-                {
-                    'response_msg': 'Required data missing in POST request.',
-                    'severity': 'error'
-                }
-            ),
-            400
-        )
-        return response
+        return helpers.json_response('Required data missing in POST request.', 'error', 400)
 
 
 @app.route('/api/read_message', methods=['POST'])
@@ -93,46 +56,12 @@ def read_message():
                 db.session.add(retrieved_msg)
                 db.session.commit()
 
-                response = make_response(
-                    jsonify(
-                        {
-                            'response_msg': f'{retrieved_msg.message}',
-                            'severity': 'success'
-                         },
-                    ),
-                    200
-                )
-                return response
+                return helpers.json_response(retrieved_msg.message, 'success', 200)
+
             else:
-                response = make_response(
-                    jsonify(
-                        {
-                            'response_msg': 'Invalid message UUID or wrong password.',
-                            'severity': 'error'
-                         },
-                    ),
-                    401
-                )
-                return response
+                return helpers.json_response('Invalid message UUID or wrong password.', 'error', 401)
         else:
-            response = make_response(
-                jsonify(
-                    {
-                        'response_msg': 'Content-Type should be application/json',
-                        'severity': 'error'
-                     },
-                ),
-                400
-            )
-            return response
+            return helpers.json_response('Content-Type should be application/json', 'error', 400)
+
     except KeyError:
-        response = make_response(
-            jsonify(
-                {
-                    'response_msg': 'Required data missing in POST request.',
-                    'severity': 'error'
-                }
-            ),
-            400
-        )
-        return response
+        return helpers.json_response('Required data missing in POST request.', 'error', 400)
