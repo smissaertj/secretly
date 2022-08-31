@@ -23,21 +23,28 @@
   </vee-form>
 
   <!--  On Success-->
-  <div
-    class="alert alert-success shadow-lg w-1/2 mb-8 justify-center rounded"
-    v-else-if="response.severity === 'success'"
-  >
-    <div>
-      <span>{{ response.response_msg }}</span>
+  <template v-else-if="response.severity === 'success'">
+    <div
+      class="alert alert-success shadow-lg w-1/4 mb-8 justify-center rounded"
+    >
+      <div class="flex flex-wrap justify-center">
+        <div>Message decrypted successfully!</div>
+      </div>
     </div>
-  </div>
+    <div class="card w-1/2 bg-base-200 shadow-xl text-center mb-8">
+      <div class="card-body">
+        <p class="text-lg">{{ response.response_msg }}</p>
+      </div>
+    </div>
+  </template>
+
   <!--  On Error-->
   <div
     class="alert alert-error shadow-lg w-1/2 mb-8 justify-center rounded"
     v-else-if="response.severity === 'error'"
   >
-    <div class="">
-      <span>{{ response.response_msg }}</span>
+    <div>
+      <span>Error! {{ response.response_msg }}</span>
     </div>
   </div>
 </template>
@@ -57,7 +64,6 @@ export default {
   },
   methods: {
     async retrieveMsg(values) {
-      console.log(values);
       try {
         await axios
           .post("http://localhost:8080/api/read_message", {
@@ -65,6 +71,7 @@ export default {
             password: values.passwd,
           })
           .then((response) => {
+            console.log(response.data);
             this.response = response.data;
           });
       } catch (error) {
@@ -74,8 +81,3 @@ export default {
   },
 };
 </script>
-
-<!--TODO - Disable Form & display message when data is being retrieved-->
-<!--TODO - Display error or message-->
-
-<style scoped></style>

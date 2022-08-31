@@ -8,7 +8,7 @@
       Create or Read Password Encrypted Messages
     </div>
     <div class="navbar-end">
-      <a class="btn btn-primary">Instructions</a>
+      <a class="btn btn-secondary">Instructions</a>
     </div>
   </div>
 </template>
