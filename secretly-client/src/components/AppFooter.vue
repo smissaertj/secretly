@@ -1,5 +1,7 @@
 <template>
-  <footer class="footer items-center p-4 bg-neutral text-neutral-content mt-20">
+  <footer
+    class="footer items-center p-4 bg-neutral text-neutral-content mt-5 rounded-b-lg"
+  >
     <div class="items-center grid-flow-col">
       <svg
         width="36"

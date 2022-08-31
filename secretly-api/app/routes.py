@@ -10,7 +10,7 @@ def new_message():
         if content_type == 'application/json':
 
             # Parse the JSON from the POST request
-            data = request.get_json()[0]
+            data = request.get_json()
             message = data['message']
             password = data['password']
             to_email = data['to_email']
@@ -40,7 +40,8 @@ def read_message():
     try:
         content_type = request.headers.get('Content-Type')
         if content_type == 'application/json':
-            data = request.get_json()[0]
+            data = request.get_json()
+            print(data)
             uuid = data['uuid']
             password = data['password']
 
@@ -64,4 +65,5 @@ def read_message():
             return helpers.json_response('Content-Type should be application/json', 'error', 400)
 
     except KeyError:
+        print(request.get_json())
         return helpers.json_response('Required data missing in POST request.', 'error', 400)

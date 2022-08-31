@@ -1,20 +1,20 @@
 <template>
   <!--  <RouterView />-->
-  <div class="container mx-auto px-10">
-    <AppNavBar />
-    <div class="flex flex-col w-full border-opacity-50 my-auto mt-20">
-      <div class="grid card bg-base-300 rounded-box place-items-center">
-        <p class="text-2xl m-4">Retrieve a Message</p>
-        <AppRetrieveMsg />
+  <div class="flex h-screen">
+    <div class="container m-auto px-10">
+      <AppNavBar />
+      <div class="flex flex-col w-full border-opacity-50 my-auto mt-5">
+        <div class="grid card bg-base-300 place-items-center">
+          <p class="text-2xl m-4">Retrieve a Message</p>
+          <AppRetrieveMsg />
+        </div>
+        <div class="divider">OR</div>
+        <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
+          <p class="text-2xl m-4">Login To Send a Message</p>
+        </div>
       </div>
-      <div class="divider">OR</div>
-      <div
-        class="grid h-20 card bg-base-300 rounded-box place-items-center rounded-br-lg"
-      >
-        <p class="text-2xl m-4">Login To Send a Message</p>
-      </div>
+      <AppFooter />
     </div>
-    <AppFooter />
   </div>
 </template>
 <script>

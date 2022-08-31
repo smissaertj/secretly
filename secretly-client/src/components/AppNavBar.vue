@@ -1,12 +1,14 @@
 <template>
   <!--  Navbar-->
-  <div class="navbar bg-neutral text-neutral-content mt-4 rounded-tl-lg">
+  <div class="navbar bg-neutral text-neutral-content mt-4 rounded-t-lg">
     <div class="navbar-start">
-      <a class="btn btn-ghost normal-case text-xl">Secretly</a>
+      <a class="btn btn-ghost normal-case text-xl" href="/">Secretly</a>
     </div>
-    <div class="navbar-center hidden lg:flex">NAVBAR CENTER</div>
+    <div class="navbar-center hidden lg:flex">
+      Create or Read Password Encrypted Messages
+    </div>
     <div class="navbar-end">
-      <a class="btn btn-primary">Get started</a>
+      <a class="btn btn-primary">Instructions</a>
     </div>
   </div>
 </template>
