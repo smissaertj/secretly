@@ -29,8 +29,10 @@
     >
       <div class="flex flex-wrap justify-center">
         <div>
-          <font-awesome-icon icon="fa-solid fa-check" class="mr-2" />Message
-          decrypted successfully!
+          <font-awesome-icon
+            icon="fa-solid fa-check"
+            class="mr-2 fa-2xl"
+          />Message decrypted!
         </div>
       </div>
     </div>
@@ -50,7 +52,7 @@
       <span
         ><font-awesome-icon
           icon="fa-solid fa-circle-exclamation"
-          class="mr-2"
+          class="mr-2 fa-2xl"
         />
         Error! {{ response.response_msg }}</span
       >

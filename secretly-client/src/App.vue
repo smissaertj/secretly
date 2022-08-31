@@ -11,7 +11,9 @@
         <div class="divider">OR</div>
         <div class="grid card bg-base-300 rounded-box place-items-center">
           <p class="text-2xl m-4">Login To Send a Message</p>
-          <button @click="login" class="btn btn-accent m-4">Log in</button>
+          <button @click.prevent="login" class="btn btn-accent m-4">
+            Log in
+          </button>
         </div>
       </div>
       <AppFooter />
@@ -24,7 +26,6 @@
 import AppNavBar from "./components/AppNavBar.vue";
 import AppRetrieveMsg from "./components/AppRetrieveMsg.vue";
 import AppFooter from "./components/AppFooter.vue";
-import { useAuth0 } from "@auth0/auth0-vue";
 
 export default {
   name: "App",
@@ -32,19 +33,6 @@ export default {
     AppNavBar,
     AppRetrieveMsg,
     AppFooter,
-  },
-  setup() {
-    const { loginWithRedirect } = useAuth0();
-
-    return {
-      login: () => {
-        try {
-          loginWithRedirect();
-        } catch (error) {
-          console.log(error);
-        }
-      },
-    };
   },
 };
 </script>
