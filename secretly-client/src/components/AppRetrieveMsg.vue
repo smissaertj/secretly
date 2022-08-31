@@ -28,7 +28,10 @@
       class="alert alert-success shadow-lg w-1/4 mb-8 justify-center rounded"
     >
       <div class="flex flex-wrap justify-center">
-        <div>Message decrypted successfully!</div>
+        <div>
+          <font-awesome-icon icon="fa-solid fa-check" class="mr-2" />Message
+          decrypted successfully!
+        </div>
       </div>
     </div>
     <div class="card w-1/2 bg-base-200 shadow-xl text-center mb-8">
@@ -44,13 +47,20 @@
     v-else-if="response.severity === 'error'"
   >
     <div>
-      <span>Error! {{ response.response_msg }}</span>
+      <span
+        ><font-awesome-icon
+          icon="fa-solid fa-circle-exclamation"
+          class="mr-2"
+        />
+        Error! {{ response.response_msg }}</span
+      >
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+
 export default {
   name: "AppRetrieveMsg",
   data() {
