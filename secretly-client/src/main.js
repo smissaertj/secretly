@@ -4,16 +4,17 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 // import router from './router'
 
-import "./assets/main.css";
-import VeeValidatePlugin from "./includes/validation.js";
+import "@/assets/main.css";
+import VeeValidatePlugin from "@/includes/validation.js";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
   faCheck,
   faCircleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
+import { faSquareGithub } from "@fortawesome/free-brands-svg-icons";
 
-library.add(faCheck, faCircleExclamation);
+library.add(faCheck, faCircleExclamation, faSquareGithub);
 
 const app = createApp(App);
 
