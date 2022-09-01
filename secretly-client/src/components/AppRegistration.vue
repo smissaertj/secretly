@@ -63,6 +63,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "AppRegistration",
   data() {
@@ -72,12 +74,28 @@ export default {
         passwd: "required",
         confirmPasswd: "required",
       },
+      response: "",
     };
   },
   methods: {
-    register(values) {
+    async register(values) {
       console.log(values);
+
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_API_URL + "/api/signup",
+          {
+            email: values.email,
+            password: values.passwd,
+          }
+        );
+        this.response = response.data;
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
 </script>
+
+// yzuzPywSuqcJhYD2 // // dPxXg8RndDv3b0kJ
