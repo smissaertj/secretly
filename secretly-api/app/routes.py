@@ -17,18 +17,19 @@ def token_required(f):
 
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-            current_user = models.User.filter_by(id=data['user_id'])
+            print(data)
+            current_user = models.User.query.filter_by(id=str(data['public_id'])).first()
 
             if current_user == None:
                 return helpers.json_response('Invalid Authentication Token!', 'error', 401)
 
-            if not current_user['is_active']:
+            if not current_user.is_active:
                 return helpers.json_response('Account is deactivated!', 'error', 403)
 
         except Exception as e:
             return helpers.json_response(str(e), 'error', 500)
 
-        return f(current_user, *args, **kwargs)
+        return f(current_user)
 
     return decorated
 
@@ -58,7 +59,6 @@ def signup():
 # TODO - Email Activation
 
 
-# TODO - Login
 @app.route('/api/login', methods=['POST'])
 def login():
     try:
@@ -85,9 +85,14 @@ def login():
     except KeyError:
         return helpers.json_response('Required data missing in POST request.', 'error', 400)
 
+# TODO - User Profile
+
+
+# TODO - Admin Panel
 
 @app.route('/api/new_message', methods=['POST'])
-def new_message():
+@token_required
+def new_message(current_user):
     try:
         content_type = request.headers.get('Content-Type')
         if content_type == 'application/json':
