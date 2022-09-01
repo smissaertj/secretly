@@ -1,6 +1,6 @@
 <template>
   <vee-form
-    class="form-control m-4"
+    class="form-control m-4 justify-center w-1/3"
     :validation-schema="retrieveMsgSchema"
     @submit="retrieveMsg"
     v-if="!response"
@@ -8,7 +8,7 @@
     <vee-field
       name="uuid"
       type="text"
-      placeholder="Unique Identifier"
+      placeholder="Message Unique Identifier"
       class="input input-bordered text-center m-2"
     />
     <ErrorMessage class="text-red-600" name="uuid" />
@@ -19,7 +19,7 @@
       class="input input-bordered text-center m-2"
     />
     <ErrorMessage class="text-red-600" name="passwd" />
-    <button class="btn btn-accent btn-wide m-2" type="submit">
+    <button class="btn btn-accent btn-wide m-2 mx-auto" type="submit">
       Get Message
     </button>
   </vee-form>

@@ -1,9 +1,9 @@
 <template>
-  <p class="text mt-2">Login To Send a Message</p>
+  <p class="text mt-2">Create Account</p>
   <vee-form
     class="form-control mb-4 justify-center w-1/3"
-    :validation-schema="loginSchema"
-    @submit="login"
+    :validation-schema="registerSchema"
+    @submit="register"
     v-if="!response"
   >
     <vee-field
@@ -20,8 +20,15 @@
       class="input input-bordered text-center m-2"
     />
     <ErrorMessage class="text-red-600" name="passwd" />
+    <vee-field
+      name="confirmPasswd"
+      type="password"
+      placeholder="Confirm Password"
+      class="input input-bordered text-center m-2"
+    />
+    <ErrorMessage class="text-red-600" name="confirmPasswd" />
     <button class="btn btn-accent btn-wide m-2 mx-auto" type="submit">
-      Login
+      Register
     </button>
   </vee-form>
 
@@ -56,40 +63,20 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
-  name: "AppLogin",
+  name: "AppRegistration",
   data() {
     return {
-      loginSchema: {
+      registerSchema: {
         email: "required|email",
         passwd: "required",
+        confirmPasswd: "required",
       },
-      response: "",
     };
   },
   methods: {
-    async login(values) {
+    register(values) {
       console.log(values);
-      try {
-        const response = await axios.post(
-          import.meta.env.VITE_API_URL + "/api/login",
-          {
-            email: values.email,
-            password: values.passwd,
-          }
-        );
-        const token = response.data["token"];
-        this.response = response.data;
-        localStorage.setItem("secretlyUser", token);
-        setTimeout(function () {
-          location.reload();
-        }, 1000);
-      } catch (error) {
-        console.log(error);
-        this.response = error.response.data;
-      }
     },
   },
 };
