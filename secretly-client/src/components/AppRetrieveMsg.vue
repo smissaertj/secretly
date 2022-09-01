@@ -27,7 +27,7 @@
   <!--  On Success-->
   <template v-else-if="response.severity === 'success'">
     <div
-      class="alert alert-success shadow-lg w-1/4 mb-8 justify-center rounded"
+      class="alert alert-success shadow-lg w-1/4 my-4 justify-center rounded"
     >
       <div class="flex flex-wrap justify-center">
         <div>
@@ -47,7 +47,7 @@
 
   <!--  On Error-->
   <div
-    class="alert alert-error shadow-lg w-1/2 mb-8 justify-center rounded"
+    class="alert alert-error shadow-lg w-1/2 my-4 justify-center rounded"
     v-else-if="response.severity === 'error'"
   >
     <div>
@@ -56,7 +56,7 @@
           icon="fa-solid fa-circle-exclamation"
           class="mr-2 fa-2xl"
         />
-        Error! {{ response.response_msg }}</span
+        {{ response.response_msg }}</span
       >
     </div>
   </div>

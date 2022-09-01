@@ -11,7 +11,12 @@
         </div>
         <div class="navbar-end">
           <a class="btn btn-link normal-case" v-show="userToken">Profile</a>
-          <a class="btn btn-link normal-case" v-show="userToken">Logout</a>
+          <a
+            class="btn btn-link normal-case"
+            v-show="userToken"
+            @click.prevent="logout"
+            >Logout</a
+          >
           <a class="btn btn-secondary">Instructions</a>
         </div>
       </div>
@@ -22,7 +27,7 @@
         <div class="grid card bg-base-300 rounded-box place-items-center mb-2">
           <div class="stats shadow bg-base-300 mt-1">
             <div class="stat place-items-center">
-              <div class="stat-title">Total Messages</div>
+              <div class="stat-title">Sent Messages</div>
               <div class="stat-value text-accent">31K</div>
             </div>
 
@@ -36,7 +41,6 @@
               <div class="stat-value text-accent">1,200</div>
             </div>
           </div>
-          <!-- TODO - Else: show AppSendMsg -->
         </div>
       </div>
       <div class="grid card bg-base-300 place-items-center mt-2">
@@ -94,6 +98,7 @@
 import AppRetrieveMsg from "@/components/AppRetrieveMsg.vue";
 import AppLogin from "@/components/AppLogin.vue";
 import AppRegistration from "@/components/AppRegistration.vue";
+import { mapWritableState } from "pinia";
 import { useUserStore } from "@/stores/userStore";
 
 export default {
@@ -105,13 +110,20 @@ export default {
   },
   data() {
     return {
-      userToken: "",
       tab: "readMsg",
     };
   },
   mounted() {
     const userStore = useUserStore();
     this.userToken = userStore.token !== "undefined" ? userStore.token : false;
+  },
+  computed: {
+    ...mapWritableState(useUserStore, { userToken: "token" }),
+  },
+  methods: {
+    logout() {
+      this.userToken = undefined;
+    },
   },
 };
 </script>
