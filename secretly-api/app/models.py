@@ -41,11 +41,12 @@ class Message(db.Model):
     is_read = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, message_txt, passwd_hash):
+    def __init__(self, message_txt, passwd_hash, user_id):
         self.uuid = os.urandom(24).hex()
         self.message = message_txt
         self.passwd_hash = passwd_hash
         self.create_date = datetime.now().strftime('%Y-%m-%d')
+        self.user_id = user_id
 
     def addToDB(self):
         db.session.add(self)

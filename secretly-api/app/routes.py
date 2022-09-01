@@ -112,7 +112,7 @@ def new_message(current_user):
             passwd_hash = helpers.hash_password(password)
 
             # Create new Message instance and save data to database
-            new_message = models.Message(message_txt=message, passwd_hash=passwd_hash)
+            new_message = models.Message(message_txt=message, passwd_hash=passwd_hash, user_id=current_user.id)
             new_message.addToDB()
 
             # Send email with message.uuid
