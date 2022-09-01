@@ -48,6 +48,11 @@ def signup():
 
             passwd_hash = helpers.hash_password(password)
 
+            # Check if a user with the same email already exists
+            user = models.User.query.filter_by(email=email).first()
+            if user != None:
+                return helpers.json_response('Email already registered!', 'error', 400)
+
             new_user = models.User(email=email, passwd_hash=passwd_hash)
             new_user.addToDB()
 
