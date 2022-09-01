@@ -19,7 +19,9 @@
       class="input input-bordered text-center m-2"
     />
     <ErrorMessage class="text-red-600" name="passwd" />
-    <button class="btn btn-wide m-2" type="submit">Get Message</button>
+    <button class="btn btn-accent btn-wide m-2" type="submit">
+      Get Message
+    </button>
   </vee-form>
 
   <!--  On Success-->

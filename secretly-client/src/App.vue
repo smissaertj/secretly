@@ -10,10 +10,8 @@
         </div>
         <div class="divider">OR</div>
         <div class="grid card bg-base-300 rounded-box place-items-center">
-          <p class="text-2xl m-4">Login To Send a Message</p>
-          <button @click.prevent="login" class="btn btn-accent m-4">
-            Log in
-          </button>
+          <app-login v-if="!userToken" />
+          <!--          TODO - Else: show AppSendMsg-->
         </div>
       </div>
       <AppFooter />
@@ -23,16 +21,29 @@
 <script>
 // import { RouterLink, RouterView } from "vue-router";
 // import HelloWorld from "./components/HelloWorld.vue";
-import AppNavBar from "./components/AppNavBar.vue";
-import AppRetrieveMsg from "./components/AppRetrieveMsg.vue";
-import AppFooter from "./components/AppFooter.vue";
+
+import AppNavBar from "@/components/AppNavBar.vue";
+import AppRetrieveMsg from "@/components/AppRetrieveMsg.vue";
+import AppFooter from "@/components/AppFooter.vue";
+import AppLogin from "@/components/AppLogin.vue";
+import { useUserStore } from "@/stores/userStore";
 
 export default {
   name: "App",
   components: {
     AppNavBar,
     AppRetrieveMsg,
+    AppLogin,
     AppFooter,
+  },
+  data() {
+    return {
+      userToken: "",
+    };
+  },
+  mounted() {
+    const userStore = useUserStore();
+    this.userToken = userStore.token != "undefined" ? userStore.token : false;
   },
 };
 </script>

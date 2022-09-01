@@ -13,6 +13,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/vue-fontawesome": "^3.0.1",
     "@vee-validate/rules": "^4.6.7",
+    "@vueuse/core": "^9.1.1",
     "axios": "^0.27.2",
     "daisyui": "^2.24.0",
     "pinia": "^2.0.17",

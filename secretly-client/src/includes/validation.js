@@ -20,7 +20,7 @@ export default {
       generateMessage: (ctx) => {
         const messages = {
           required: `The ${ctx.field} field is required.`,
-          email: `The ${ctx.field} field must be a valid email.`,
+          email: `Must be a valid ${ctx.field}.`,
         };
 
         const message = messages[ctx.rule.name]
