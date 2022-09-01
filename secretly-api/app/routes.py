@@ -17,7 +17,6 @@ def token_required(f):
 
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-            print(data)
             current_user = models.User.query.filter_by(id=str(data['public_id'])).first()
 
             if current_user == None:
