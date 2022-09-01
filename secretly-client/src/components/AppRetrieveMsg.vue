@@ -78,7 +78,7 @@ export default {
     async retrieveMsg(values) {
       try {
         await axios
-          .post("http://localhost:8080/api/read_message", {
+          .post(import.meta.env.VITE_API_URL + "/api/read_message", {
             uuid: values.uuid,
             password: values.passwd,
           })

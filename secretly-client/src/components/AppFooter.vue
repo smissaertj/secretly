@@ -4,7 +4,7 @@
   >
     <div class="items-center grid-flow-col">
       <a href="https://joerismissaert.dev" target="_blank">
-        <p>Copyright © 2022 - Joeri JM Smissaert</p>
+        <p>© 2022 - Joeri JM Smissaert</p>
       </a>
     </div>
     <div class="grid-flow-col gap-4 md:place-self-center md:justify-self-end">

@@ -4,7 +4,7 @@
     <div class="navbar-start">
       <a class="btn btn-ghost normal-case text-xl" href="/">Secretly</a>
     </div>
-    <div class="navbar-center hidden lg:flex">Password Encrypted Messages</div>
+    <div class="navbar-center hidden lg:flex">Password Protected Messages</div>
     <div class="navbar-end">
       <a class="btn btn-secondary">Instructions</a>
     </div>
