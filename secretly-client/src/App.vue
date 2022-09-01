@@ -98,6 +98,7 @@
 import AppRetrieveMsg from "@/components/AppRetrieveMsg.vue";
 import AppLogin from "@/components/AppLogin.vue";
 import AppRegistration from "@/components/AppRegistration.vue";
+import { mapWritableState } from "pinia";
 import { useUserStore } from "@/stores/userStore";
 
 export default {
@@ -109,7 +110,6 @@ export default {
   },
   data() {
     return {
-      userToken: "",
       tab: "readMsg",
     };
   },
@@ -117,9 +117,12 @@ export default {
     const userStore = useUserStore();
     this.userToken = userStore.token !== "undefined" ? userStore.token : false;
   },
+  computed: {
+    ...mapWritableState(useUserStore, { userToken: "token" }),
+  },
   methods: {
     logout() {
-      this.userToken = null;
+      this.userToken = undefined;
     },
   },
 };

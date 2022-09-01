@@ -55,7 +55,7 @@ def signup():
             new_user = models.User(email=email, passwd_hash=passwd_hash)
             new_user.addToDB()
 
-            return helpers.json_response('Thank you. You can now login', 'success', 200)
+            return helpers.json_response('Check your email for the activation link.', 'success', 200)
 
     except KeyError:
         return helpers.json_response('Required data missing in POST request.', 'error', 400)
@@ -152,7 +152,7 @@ def read_message():
                 return helpers.json_response(retrieved_msg.message, 'success', 200, retrieved_msg.uuid)
 
             else:
-                return helpers.json_response('Invalid message UUID or wrong password.', 'error', 401)
+                return helpers.json_response('Invalid UUID or wrong password.', 'error', 401)
         else:
             return helpers.json_response('Content-Type should be application/json', 'error', 400)
 

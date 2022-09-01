@@ -49,7 +49,7 @@
           icon="fa-solid fa-circle-exclamation"
           class="mr-2 fa-2xl"
         />
-        Error! {{ response.response_msg }}</span
+        {{ response.response_msg }}</span
       >
     </div>
   </div>
@@ -71,7 +71,6 @@ export default {
   },
   methods: {
     async login(values) {
-      console.log(values);
       try {
         const response = await axios.post(
           import.meta.env.VITE_API_URL + "/api/login",
@@ -87,7 +86,6 @@ export default {
           location.reload();
         }, 1000);
       } catch (error) {
-        console.log(error);
         this.response = error.response.data;
       }
     },
