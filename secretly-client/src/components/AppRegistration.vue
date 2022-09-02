@@ -72,7 +72,7 @@ export default {
       registerSchema: {
         email: "required|email",
         passwd: "required",
-        confirmPasswd: "required",
+        confirmPasswd: "required|confirmed:@passwd",
       },
       response: "",
     };
@@ -92,6 +92,7 @@ export default {
         this.response = response.data;
       } catch (error) {
         console.log(error);
+        this.response = error.response.data;
       }
     },
   },

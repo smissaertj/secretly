@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cyberpunk">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Secretly</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.24.0/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+  <div class="flex h-screen">
+    {%  if state == 'success'  %}
+    <div class="container m-auto px-10 w-1/3">
+      <div class="alert alert-success shadow-lg">
+        <div>
+          <span>Account Activated!</span>
+        </div>
+        <a href="{{ app_url }}"><button class="btn">Login</button></a>
+      </div>
+    </div>
+
+  {#    On Error#}
+    {%  else %}
+    <div class="container m-auto px-10 w-1/2">
+      <div class="alert alert-error shadow-lg">
+        <div>
+           <span>No such UUID exists or account already active!</span>
+        </div>
+        <a href="{{ app_url }}">
+          <button class="btn mx-auto">Home</button>
+        </a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  </body>
+</html>

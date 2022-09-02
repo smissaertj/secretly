@@ -42,13 +42,13 @@ def verify_password(hash, passwd):
         return False
 
 # Email sending
-def send_mail(to_email, uuid):
+def send_mail(to_email, subject, content):
     try:
         sg = sendgrid.SendGridAPIClient(api_key=config('SENDGRID_API_KEY'))
         from_email = Email(config('SENDGRID_FROM_EMAIL'))
         to_email = To(to_email)
-        subject = "You received an encrypted message!"
-        content = Content('text/html', uuid)
+        subject = subject
+        content = Content('text/html', content)
         mail = Mail(from_email, to_email, subject, content)
 
         mail_json = mail.get()

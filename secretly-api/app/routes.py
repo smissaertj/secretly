@@ -1,8 +1,11 @@
 import datetime
 import jwt
 from app import app, db, helpers, models
-from flask import request
+from app.templates import emails
+from decouple import config
+from flask import request, render_template
 from functools import wraps
+
 
 def token_required(f):
     """ Decorator function to check if the Authorization header is passed in the request, return a 403 if missing."""
@@ -33,7 +36,6 @@ def token_required(f):
     return decorated
 
 
-# TODO - Signup/Register
 @app.route('/api/signup', methods=['POST'])
 def signup():
     try:
@@ -55,12 +57,34 @@ def signup():
             new_user = models.User(email=email, passwd_hash=passwd_hash)
             new_user.addToDB()
 
-            return helpers.json_response('Check your email for the activation link.', 'success', 200)
+            # Send account activation Link
+            uuid = new_user.activation_uuid
+            content = emails.activation_email(uuid)
+            sg_response = helpers.send_mail(to_email=new_user.email, subject='Activate your account.', content=content)
+            if sg_response:
+                return helpers.json_response('Check your email for the activation link.', 'success', 200)
+            else:
+                # If the email fails to send, delete the user from the database
+                models.User.query.filter_by(id=new_user.id).delete()
+                db.commit()
+                return helpers.json_response('Error sending email, try registering again later.', 'error', 500, msg_uuid=new_message.uuid)
 
     except KeyError:
         return helpers.json_response('Required data missing in POST request.', 'error', 400)
 
-# TODO - Email Activation
+
+@app.route('/api/activate/<uuid>', methods=['GET'])
+def activate_account(uuid):
+    db_user = models.User.query.filter_by(activation_uuid=uuid).first()
+
+    if db_user and db_user.is_active == False:
+        db_user.is_active = True
+        db.session.commit()
+        app_url = config('APP_URL')
+        return render_template('activation.html', state='success', app_url=app_url)
+
+    else:
+        return render_template('activation.html', state='error', app_url=config('APP_URL'))
 
 
 @app.route('/api/login', methods=['POST'])
@@ -115,7 +139,9 @@ def new_message(current_user):
             new_message.addToDB()
 
             # Send email with message.uuid
-            sg_response = helpers.send_mail(to_email, new_message.uuid)
+            subject = "You received a new message!"
+            content = emails.message_email(new_message.uuid)
+            sg_response = helpers.send_mail(to_email=to_email, subject=subject, content=content)
             if sg_response:
                 return helpers.json_response('Email sent!', 'success', 200, msg_uuid=new_message.uuid)
             else:
@@ -144,9 +170,9 @@ def read_message():
                     retrieved_msg.is_read != True and \
                     helpers.verify_password(retrieved_msg.passwd_hash, password):
                 # Mark the message as read
-                # retrieved_msg.is_read = True
+                retrieved_msg.is_read = True
                 retrieved_msg.read_date = datetime.datetime.now()
-                db.session.add(retrieved_msg)
+                # db.session.add(retrieved_msg)
                 db.session.commit()
 
                 return helpers.json_response(retrieved_msg.message, 'success', 200, retrieved_msg.uuid)
