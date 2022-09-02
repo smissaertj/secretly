@@ -92,6 +92,7 @@ export default {
         this.response = response.data;
       } catch (error) {
         console.log(error);
+        this.response = error.response.data;
       }
     },
   },
