@@ -118,7 +118,8 @@ export default {
   },
   mounted() {
     const userStore = useUserStore();
-    this.userToken = userStore.token !== "undefined" ? userStore.token : false;
+    this.userToken =
+      userStore.token !== "undefined" ? userStore.token : undefined;
   },
   computed: {
     ...mapWritableState(useUserStore, { userToken: "token" }),
