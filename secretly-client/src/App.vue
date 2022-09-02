@@ -67,6 +67,7 @@
         </div>
         <AppRetrieveMsg v-if="tab === 'readMsg'" />
         <AppLogin v-if="!userToken && tab == 'sendMsg'" />
+        <AppSendMessage v-if="userToken && tab == 'sendMsg'" />
         <AppRegistration v-if="tab == 'register'" />
       </div>
       <footer
@@ -98,6 +99,7 @@
 import AppRetrieveMsg from "@/components/AppRetrieveMsg.vue";
 import AppLogin from "@/components/AppLogin.vue";
 import AppRegistration from "@/components/AppRegistration.vue";
+import AppSendMessage from "@/components/AppSendMessage.vue";
 import { mapWritableState } from "pinia";
 import { useUserStore } from "@/stores/userStore";
 
@@ -107,6 +109,7 @@ export default {
     AppRetrieveMsg,
     AppLogin,
     AppRegistration,
+    AppSendMessage,
   },
   data() {
     return {

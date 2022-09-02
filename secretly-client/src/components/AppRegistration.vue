@@ -72,7 +72,7 @@ export default {
       registerSchema: {
         email: "required|email",
         passwd: "required",
-        confirmPasswd: "required",
+        confirmPasswd: "required|confirmed:@passwd",
       },
       response: "",
     };

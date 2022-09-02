@@ -5,7 +5,7 @@ import {
   ErrorMessage,
   configure,
 } from "vee-validate";
-import { required, email } from "@vee-validate/rules";
+import { required, email, confirmed } from "@vee-validate/rules";
 
 export default {
   install(app) {
@@ -15,12 +15,14 @@ export default {
 
     defineRule("required", required);
     defineRule("email", email);
+    defineRule("confirmed", confirmed);
 
     configure({
       generateMessage: (ctx) => {
         const messages = {
           required: `The ${ctx.field} field is required.`,
           email: `Must be a valid ${ctx.field}.`,
+          confirmed: "Passwords do not match.",
         };
 
         const message = messages[ctx.rule.name]
