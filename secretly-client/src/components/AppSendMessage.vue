@@ -45,16 +45,10 @@
     >
       <div class="flex flex-wrap justify-center">
         <div>
-          <font-awesome-icon
-            icon="fa-solid fa-check"
-            class="mr-2 fa-2xl"
-          />Message decrypted!
+          <font-awesome-icon icon="fa-solid fa-check" class="mr-2 fa-2xl" />{{
+            response.response_msg
+          }}
         </div>
-      </div>
-    </div>
-    <div class="card w-1/2 bg-base-200 shadow-xl text-center mb-8">
-      <div class="card-body">
-        <p class="text-lg">{{ response.response_msg }}</p>
       </div>
     </div>
   </template>
@@ -77,6 +71,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import { mapState } from "pinia";
+import { useUserStore } from "@/stores/userStore";
 export default {
   name: "AppSendMessage",
   data() {
@@ -89,6 +86,35 @@ export default {
       },
       response: "",
     };
+  },
+  computed: {
+    ...mapState(useUserStore, { userToken: "token" }),
+  },
+  methods: {
+    async sendMsg(values) {
+      const token = this.userToken;
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+      try {
+        await axios
+          .post(
+            import.meta.env.VITE_API_URL + "/api/new_message",
+            {
+              message: values.messageTxt,
+              to_email: values.destEmail,
+              password: values.passwd,
+            },
+            config
+          )
+          .then((response) => {
+            console.log(response.data);
+            this.response = response.data;
+          });
+      } catch (error) {
+        this.response = error.response.data;
+      }
+    },
   },
 };
 </script>
