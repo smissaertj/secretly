@@ -2,7 +2,8 @@ import datetime
 import jwt
 from app import app, db, helpers, models
 from app.templates import emails
-from flask import request
+from decouple import config
+from flask import request, render_template
 from functools import wraps
 
 
@@ -79,9 +80,11 @@ def activate_account(uuid):
     if db_user and db_user.is_active == False:
         db_user.is_active = True
         db.session.commit()
-        return helpers.json_response('Account Activated!', 'success', 200)
+        app_url = config('APP_URL')
+        return render_template('activation.html', state='success', app_url=app_url)
+
     else:
-        return helpers.json_response('No such UUID exists or account already active!', 'error', 400)
+        return render_template('activation.html', state='error', app_url=config('APP_URL'))
 
 
 @app.route('/api/login', methods=['POST'])

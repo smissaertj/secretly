@@ -13,7 +13,7 @@ class User(db.Model):
     last_name = db.Column(db.String())
     create_date = db.Column(db.Date)
     is_admin = db.Column(db.Boolean, default=False)
-    is_active = db.Column(db.Boolean, default=True)
+    is_active = db.Column(db.Boolean, default=False)
     activation_uuid = db.Column(db.String(32))
     messages = db.relationship('Message', backref='users')
 
@@ -21,6 +21,7 @@ class User(db.Model):
         self.email = email
         self.passwd_hash = passwd_hash
         self.create_date = datetime.now().strftime('%Y-%m-%d')
+        self.is_active = False
         self.activation_uuid = os.urandom(8).hex()
 
     def addToDB(self):

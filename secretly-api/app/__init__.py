@@ -6,7 +6,7 @@ from flask_migrate import Migrate
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = config('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
