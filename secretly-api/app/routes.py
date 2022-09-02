@@ -137,7 +137,7 @@ def new_message(current_user):
 
             # Send email with message.uuid
             subject = "You received a new message!"
-            content = templates.emails.message_email(new_message.uuid)
+            content = emails.message_email(new_message.uuid)
             sg_response = helpers.send_mail(to_email=to_email, subject=subject, content=content)
             if sg_response:
                 return helpers.json_response('Email sent!', 'success', 200, msg_uuid=new_message.uuid)
