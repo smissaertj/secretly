@@ -11,10 +11,11 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
   faCheck,
   faCircleExclamation,
+  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { faSquareGithub } from "@fortawesome/free-brands-svg-icons";
 
-library.add(faCheck, faCircleExclamation, faSquareGithub);
+library.add(faCheck, faCircleExclamation, faSpinner, faSquareGithub);
 
 const app = createApp(App);
 

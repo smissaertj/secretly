@@ -3,7 +3,7 @@ import jwt
 from app import app, db, helpers, models
 from app.templates import emails
 from decouple import config
-from flask import request, render_template
+from flask import request, render_template, make_response, jsonify
 from functools import wraps
 
 
@@ -113,7 +113,55 @@ def login():
     except KeyError:
         return helpers.json_response('Required data missing in POST request.', 'error', 400)
 
+
 # TODO - User Profile
+@app.route('/api/user_profile', methods=['GET', 'POST'])
+@token_required
+def user_profile(currentUser):
+    content_type = request.headers.get('Content-Type')
+
+    if request.method == 'POST':
+
+        try:
+            # Update User Data
+            if content_type == 'application/json':
+
+                # Parse the JSON from the POST request
+                data = request.get_json()
+                email = data['email']
+                password = data['password']
+
+                user = models.User.query.filter_by(email=email).first()
+
+                if user:
+                    if helpers.verify_password(user.passwd_hash, password):
+                        token = jwt.encode({
+                            'public_id': user.id,
+                            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
+                        }, app.config['SECRET_KEY'], "HS256")
+
+                        return helpers.json_response('Login successful!', 'success', 200, token=token)
+
+                return helpers.json_response('Invalid email or password!', 'error', 401)
+
+        except KeyError:
+            return helpers.json_response('Required data missing in POST request.', 'error', 400)
+
+    # Retrieve User Data
+    if request.method == 'GET':
+        user = models.User.query.filter_by(id=currentUser.id).first()
+        if user:
+            return make_response(jsonify({
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'severity': 'success'
+            }),
+                200
+            )
+        else:
+            return helpers.json_response('An unhandled Exception occurred.', 'error', 500)
+
 
 
 # TODO - Admin Panel
