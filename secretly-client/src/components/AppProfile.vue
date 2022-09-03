@@ -64,7 +64,7 @@
     </div>
   </div>
   <div
-    class="alert alert-info shadow-lg w-1/2 mb-8 justify-center rounded"
+    class="alert alert-info shadow-lg w-1/3 mb-8 justify-center rounded"
     v-else
   >
     <div>

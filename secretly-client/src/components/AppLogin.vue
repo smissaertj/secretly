@@ -4,7 +4,7 @@
     class="form-control mb-4 justify-center w-1/3"
     :validation-schema="loginSchema"
     @submit="login"
-    v-if="!response"
+    v-if="!response && !loginAction"
   >
     <vee-field
       name="email"
@@ -25,6 +25,18 @@
     </button>
   </vee-form>
 
+  <!--  On LoginAction-->
+  <div
+    class="alert alert-info shadow-lg w-1/3 mb-8 justify-center rounded"
+    v-else-if="loginAction"
+  >
+    <div>
+      <span
+        ><font-awesome-icon icon="fa-solid fa-spinner" class="mr-2 fa-2xl" />
+        Logging in...</span
+      >
+    </div>
+  </div>
   <!--  On Success-->
   <div
     class="alert alert-success shadow-lg w-1/3 mb-8 justify-center rounded"
@@ -67,11 +79,13 @@ export default {
         passwd: "required",
       },
       response: "",
+      loginAction: false,
     };
   },
   methods: {
     async login(values) {
       try {
+        this.loginAction = true;
         const response = await axios.post(
           import.meta.env.VITE_API_URL + "/api/login",
           {
@@ -80,12 +94,14 @@ export default {
           }
         );
         const token = response.data["token"];
+        this.loginAction = false;
         this.response = response.data;
         localStorage.setItem("secretlyUser", token);
         setTimeout(function () {
           location.reload();
         }, 1000);
       } catch (error) {
+        this.loginAction = false;
         this.response = error.response.data;
       }
     },

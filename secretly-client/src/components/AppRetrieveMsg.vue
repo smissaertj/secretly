@@ -3,7 +3,7 @@
     class="form-control m-4 justify-center w-1/3"
     :validation-schema="retrieveMsgSchema"
     @submit="retrieveMsg"
-    v-if="!response"
+    v-if="!response && !retrieveMsgAction"
   >
     <vee-field
       name="uuid"
@@ -23,6 +23,19 @@
       Get Message
     </button>
   </vee-form>
+
+  <!--  On retrieveMsgAction-->
+  <div
+    class="alert alert-info shadow-lg w-1/3 my-4 justify-center rounded"
+    v-else-if="retrieveMsgAction"
+  >
+    <div>
+      <span
+        ><font-awesome-icon icon="fa-solid fa-spinner" class="mr-2 fa-2xl" />
+        Fetching Message...</span
+      >
+    </div>
+  </div>
 
   <!--  On Success-->
   <template v-else-if="response.severity === 'success'">
@@ -74,21 +87,25 @@ export default {
         passwd: "required",
       },
       response: "",
+      retrieveMsgAction: false,
     };
   },
   methods: {
     async retrieveMsg(values) {
       try {
+        this.retrieveMsgAction = true;
         await axios
           .post(import.meta.env.VITE_API_URL + "/api/read_message", {
             uuid: values.uuid,
             password: values.passwd,
           })
           .then((response) => {
-            console.log(response.data);
+            // console.log(response.data);
+            this.retrieveMsgAction = false;
             this.response = response.data;
           });
       } catch (error) {
+        this.retrieveMsgAction = false;
         this.response = error.response.data;
       }
     },

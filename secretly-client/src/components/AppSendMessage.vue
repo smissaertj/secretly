@@ -3,7 +3,7 @@
     class="form-control m-4 justify-center w-1/3"
     :validation-schema="sendMsgSchema"
     @submit="sendMsg"
-    v-if="!response"
+    v-if="!response && !sendMsgAction"
   >
     <vee-field
       name="destEmail"
@@ -37,6 +37,19 @@
       Send Message
     </button>
   </vee-form>
+
+  <!--  On sendMsgAction-->
+  <div
+    class="alert alert-info shadow-lg w-1/3 my-4 justify-center rounded"
+    v-else-if="sendMsgAction"
+  >
+    <div>
+      <span
+        ><font-awesome-icon icon="fa-solid fa-spinner" class="mr-2 fa-2xl" />
+        Sending Message...</span
+      >
+    </div>
+  </div>
 
   <!--  On Success-->
   <template v-else-if="response.severity === 'success'">
@@ -85,6 +98,7 @@ export default {
         confirmPasswd: "required|confirmed:@passwd",
       },
       response: "",
+      sendMsgAction: false,
     };
   },
   computed: {
@@ -97,6 +111,7 @@ export default {
         headers: { Authorization: `Bearer ${token}` },
       };
       try {
+        this.sendMsgAction = true;
         await axios
           .post(
             import.meta.env.VITE_API_URL + "/api/new_message",
@@ -108,10 +123,12 @@ export default {
             config
           )
           .then((response) => {
-            console.log(response.data);
+            // console.log(response.data);
+            this.sendMsgAction = false;
             this.response = response.data;
           });
       } catch (error) {
+        this.sendMsgAction = false;
         this.response = error.response.data;
       }
     },
