@@ -17,9 +17,11 @@ class User(db.Model):
     activation_uuid = db.Column(db.String(32))
     messages = db.relationship('Message', backref='users')
 
-    def __init__(self, email, passwd_hash):
+    def __init__(self, email, passwd_hash, first_name, last_name):
         self.email = email
         self.passwd_hash = passwd_hash
+        self.first_name = first_name
+        self.last_name = last_name
         self.create_date = datetime.now().strftime('%Y-%m-%d')
         self.is_active = False
         self.activation_uuid = os.urandom(8).hex()

@@ -86,6 +86,8 @@ export default {
           import.meta.env.VITE_API_URL + "/api/signup",
           {
             email: values.email,
+            first_name: values.firstName,
+            last_name: values.lastName,
             password: values.passwd,
           }
         );

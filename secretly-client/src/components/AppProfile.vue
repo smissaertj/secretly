@@ -16,30 +16,30 @@
     <vee-field
       name="firstName"
       type="text"
-      :placeholder="response.first_name ? response.first_name : 'First Name'"
-      :v-model="response.first_name ? response.first_name : 'First Name'"
+      placeholder="First Name"
+      v-model="response.first_name"
       class="input input-bordered text-center m-2"
     />
     <ErrorMessage class="text-red-600" name="firstName" />
     <vee-field
       name="lastName"
       type="text"
-      :placeholder="response.last_name ? response.last_name : 'Last Name'"
-      :v-model="response.last_name ? response.last_name : 'Last Name'"
+      placeholder="Last Name"
+      v-model="response.last_name"
       class="input input-bordered text-center m-2"
     />
     <ErrorMessage class="text-red-600" name="lastName" />
     <vee-field
       name="passwd"
       type="password"
-      placeholder="New Password"
+      placeholder="New Password (optional)"
       class="input input-bordered text-center m-2"
     />
     <ErrorMessage class="text-red-600" name="passwd" />
     <vee-field
       name="confirmPasswd"
       type="password"
-      placeholder="Confirm New Password"
+      placeholder="Confirm New Password (optional)"
       class="input input-bordered text-center m-2"
     />
     <ErrorMessage class="text-red-600" name="confirmPasswd" />
@@ -97,7 +97,7 @@ export default {
   computed: {
     ...mapState(useUserStore, { userToken: "token" }),
   },
-  mounted: function () {
+  created: function () {
     const token = this.userToken;
     const config = {
       headers: { Authorization: `Bearer ${token}` },
@@ -106,12 +106,39 @@ export default {
       axios
         .get(import.meta.env.VITE_API_URL + "/api/user_profile", config)
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
           this.response = response.data;
         });
     } catch (error) {
       console.log(error);
     }
+  },
+  methods: {
+    async editProfile(values) {
+      const token = this.userToken;
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+      try {
+        await axios
+          .post(
+            import.meta.env.VITE_API_URL + "/api/user_profile",
+            {
+              email: values.email,
+              first_name: values.firstName,
+              last_name: values.lastName,
+              password: values.passwd,
+            },
+            config
+          )
+          .then((response) => {
+            // console.log(response.data);
+            this.response = response.data;
+          });
+      } catch (error) {
+        this.response = error.response.data;
+      }
+    },
   },
 };
 </script>

@@ -45,6 +45,8 @@ def signup():
             # Parse the JSON from the POST request
             data = request.get_json()
             email = data['email']
+            first_name = data['first_name']
+            last_name = data['last_name']
             password = data['password']
 
             passwd_hash = helpers.hash_password(password)
@@ -54,7 +56,7 @@ def signup():
             if user != None:
                 return helpers.json_response('Email already registered!', 'error', 400)
 
-            new_user = models.User(email=email, passwd_hash=passwd_hash)
+            new_user = models.User(email=email, passwd_hash=passwd_hash, first_name=first_name, last_name=last_name)
             new_user.addToDB()
 
             # Send account activation Link
@@ -129,39 +131,41 @@ def user_profile(currentUser):
                 # Parse the JSON from the POST request
                 data = request.get_json()
                 email = data['email']
-                password = data['password']
+                first_name = data['first_name']
+                last_name = data['last_name']
+                password = data['password'] if data['password'] else None
 
-                user = models.User.query.filter_by(email=email).first()
+                if currentUser.email != email:
+                    currentUser.email = email
 
-                if user:
-                    if helpers.verify_password(user.passwd_hash, password):
-                        token = jwt.encode({
-                            'public_id': user.id,
-                            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
-                        }, app.config['SECRET_KEY'], "HS256")
+                if currentUser.first_name != first_name:
+                    currentUser.first_name = first_name
 
-                        return helpers.json_response('Login successful!', 'success', 200, token=token)
+                if currentUser.last_name != last_name:
+                    currentUser.last_name = last_name
 
-                return helpers.json_response('Invalid email or password!', 'error', 401)
+                hash = helpers.hash_password(password)
+                if password != None and currentUser.passwd_hash != hash:
+                    currentUser.passwd_hash = hash
 
+                db.session.commit()
+                return helpers.json_response('Profile data updated.', 'success', 200)
+            else:
+                return helpers.json_response('Content-Type should be application/json', 'error', 400)
         except KeyError:
             return helpers.json_response('Required data missing in POST request.', 'error', 400)
 
     # Retrieve User Data
     if request.method == 'GET':
-        user = models.User.query.filter_by(id=currentUser.id).first()
-        if user:
-            return make_response(jsonify({
-                'email': user.email,
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'severity': 'success'
-            }),
-                200
-            )
-        else:
-            return helpers.json_response('An unhandled Exception occurred.', 'error', 500)
-
+        # user = models.User.query.filter_by(id=currentUser.id).first()
+        return make_response(jsonify({
+            'email': currentUser.email,
+            'first_name': currentUser.first_name,
+            'last_name': currentUser.last_name,
+            'severity': 'success'
+        }),
+            200
+        )
 
 
 # TODO - Admin Panel
