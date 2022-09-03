@@ -10,7 +10,12 @@
           Password Protected Messages
         </div>
         <div class="navbar-end">
-          <a class="btn btn-link normal-case" v-show="userToken">Profile</a>
+          <a
+            class="btn btn-link normal-case"
+            v-show="userToken"
+            @click.prevent="showProfile"
+            >{{ profile ? "App" : "Profile" }}</a
+          >
           <a
             class="btn btn-link normal-case"
             v-show="userToken"
@@ -21,7 +26,6 @@
         </div>
       </div>
 
-      <!--  <RouterView />-->
       <!--      Main Content-->
       <div class="flex flex-col w-full border-opacity-50 my-auto mt-5">
         <div class="grid card bg-base-300 rounded-box place-items-center mb-2">
@@ -44,32 +48,36 @@
         </div>
       </div>
       <div class="grid card bg-base-300 place-items-center mt-2">
-        <div class="tabs mt-2">
-          <a
-            class="tab tab-bordered"
-            @click.prevent="tab = 'readMsg'"
-            :class="{ 'tab-active': tab == 'readMsg' }"
-            >Retrieve Message</a
-          >
-          <a
-            class="tab tab-bordered"
-            @click.prevent="tab = 'sendMsg'"
-            :class="{ 'tab-active': tab == 'sendMsg' }"
-            >Send Message</a
-          >
-          <a
-            class="tab tab-bordered"
-            v-if="!userToken"
-            @click.prevent="tab = 'register'"
-            :class="{ 'tab-active': tab === 'register' }"
-            >Register</a
-          >
-        </div>
-        <AppRetrieveMsg v-if="tab === 'readMsg'" />
-        <AppLogin v-if="!userToken && tab == 'sendMsg'" />
-        <AppSendMessage v-if="userToken && tab == 'sendMsg'" />
-        <AppRegistration v-if="tab == 'register'" />
+        <template v-if="!profile">
+          <div class="tabs mt-2">
+            <a
+              class="tab tab-bordered"
+              @click.prevent="tab = 'readMsg'"
+              :class="{ 'tab-active': tab == 'readMsg' }"
+              >Retrieve Message</a
+            >
+            <a
+              class="tab tab-bordered"
+              @click.prevent="tab = 'sendMsg'"
+              :class="{ 'tab-active': tab == 'sendMsg' }"
+              >Send Message</a
+            >
+            <a
+              class="tab tab-bordered"
+              v-if="!userToken"
+              @click.prevent="tab = 'register'"
+              :class="{ 'tab-active': tab === 'register' }"
+              >Register</a
+            >
+          </div>
+          <AppRetrieveMsg v-if="tab === 'readMsg'" />
+          <AppLogin v-if="!userToken && tab == 'sendMsg'" />
+          <AppSendMessage v-if="userToken && tab == 'sendMsg'" />
+          <AppRegistration v-if="tab == 'register'" />
+        </template>
+        <AppProfile v-else />
       </div>
+
       <footer
         class="footer items-center p-4 bg-neutral text-neutral-content mt-5 rounded-b-lg"
       >
@@ -92,14 +100,13 @@
     </div>
   </div>
 </template>
-<script>
-// import { RouterLink, RouterView } from "vue-router";
-// import HelloWorld from "./components/HelloWorld.vue";
 
+<script>
 import AppRetrieveMsg from "@/components/AppRetrieveMsg.vue";
 import AppLogin from "@/components/AppLogin.vue";
 import AppRegistration from "@/components/AppRegistration.vue";
 import AppSendMessage from "@/components/AppSendMessage.vue";
+import AppProfile from "@/components/AppProfile.vue";
 import { mapWritableState } from "pinia";
 import { useUserStore } from "@/stores/userStore";
 
@@ -110,10 +117,12 @@ export default {
     AppLogin,
     AppRegistration,
     AppSendMessage,
+    AppProfile,
   },
   data() {
     return {
       tab: "readMsg",
+      profile: false,
     };
   },
   mounted() {
@@ -127,6 +136,10 @@ export default {
   methods: {
     logout() {
       this.userToken = undefined;
+      window.location.reload();
+    },
+    showProfile() {
+      this.profile = !this.profile;
     },
   },
 };

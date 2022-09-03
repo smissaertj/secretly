@@ -3,7 +3,7 @@ import jwt
 from app import app, db, helpers, models
 from app.templates import emails
 from decouple import config
-from flask import request, render_template
+from flask import request, render_template, make_response, jsonify
 from functools import wraps
 
 
@@ -45,6 +45,8 @@ def signup():
             # Parse the JSON from the POST request
             data = request.get_json()
             email = data['email']
+            first_name = data['first_name']
+            last_name = data['last_name']
             password = data['password']
 
             passwd_hash = helpers.hash_password(password)
@@ -54,7 +56,7 @@ def signup():
             if user != None:
                 return helpers.json_response('Email already registered!', 'error', 400)
 
-            new_user = models.User(email=email, passwd_hash=passwd_hash)
+            new_user = models.User(email=email, passwd_hash=passwd_hash, first_name=first_name, last_name=last_name)
             new_user.addToDB()
 
             # Send account activation Link
@@ -113,7 +115,57 @@ def login():
     except KeyError:
         return helpers.json_response('Required data missing in POST request.', 'error', 400)
 
+
 # TODO - User Profile
+@app.route('/api/user_profile', methods=['GET', 'POST'])
+@token_required
+def user_profile(currentUser):
+    content_type = request.headers.get('Content-Type')
+
+    if request.method == 'POST':
+
+        try:
+            # Update User Data
+            if content_type == 'application/json':
+
+                # Parse the JSON from the POST request
+                data = request.get_json()
+                email = data['email']
+                first_name = data['first_name']
+                last_name = data['last_name']
+                password = data['password'] if data['password'] else None
+
+                if currentUser.email != email:
+                    currentUser.email = email
+
+                if currentUser.first_name != first_name:
+                    currentUser.first_name = first_name
+
+                if currentUser.last_name != last_name:
+                    currentUser.last_name = last_name
+
+                hash = helpers.hash_password(password)
+                if password != None and currentUser.passwd_hash != hash:
+                    currentUser.passwd_hash = hash
+
+                db.session.commit()
+                return helpers.json_response('Profile data updated.', 'success', 200)
+            else:
+                return helpers.json_response('Content-Type should be application/json', 'error', 400)
+        except KeyError:
+            return helpers.json_response('Required data missing in POST request.', 'error', 400)
+
+    # Retrieve User Data
+    if request.method == 'GET':
+        # user = models.User.query.filter_by(id=currentUser.id).first()
+        return make_response(jsonify({
+            'email': currentUser.email,
+            'first_name': currentUser.first_name,
+            'last_name': currentUser.last_name,
+            'severity': 'success'
+        }),
+            200
+        )
 
 
 # TODO - Admin Panel
