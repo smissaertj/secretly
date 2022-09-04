@@ -40,7 +40,7 @@
   <!--  On Success-->
   <template v-else-if="response.severity === 'success'">
     <div
-      class="alert alert-success shadow-lg w-1/4 my-4 justify-center rounded"
+      class="alert alert-success shadow-lg w-1/3 my-4 justify-center rounded"
     >
       <div class="flex flex-wrap justify-center">
         <div>
