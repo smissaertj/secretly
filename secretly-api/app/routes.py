@@ -134,9 +134,11 @@ def user_profile(currentUser):
                 first_name = data['first_name']
                 last_name = data['last_name']
                 password = data['password'] if data['password'] else None
+                # TODO - Fix optional password field
 
                 if currentUser.email != email:
                     currentUser.email = email
+                    # TODO - Set account inactive and resend activation email
 
                 if currentUser.first_name != first_name:
                     currentUser.first_name = first_name

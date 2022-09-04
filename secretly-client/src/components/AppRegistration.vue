@@ -60,7 +60,7 @@
 
   <!--  On Success-->
   <div
-    class="alert alert-success shadow-lg w-1/3 mb-8 justify-center rounded"
+    class="alert alert-success shadow-lg w-1/2 mb-8 justify-center rounded"
     v-else-if="response.severity === 'success'"
   >
     <div>
