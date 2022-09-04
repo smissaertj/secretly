@@ -73,6 +73,24 @@
       >
     </div>
   </div>
+  <div class="overflow-x-auto my-4" v-if="userMessages.length > 0">
+    <table class="table table-compact w-full">
+      <thead>
+        <tr>
+          <th>UUID</th>
+          <th>Destination</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(message, index) in userMessages">
+          <td>{{ message.uuid }}</td>
+          <td>{{ message.to_email }}</td>
+          <td>{{ message.is_read ? "Read" : "Unread" }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
@@ -90,6 +108,7 @@ export default {
         lastName: "required",
       },
       updateProfileAction: false,
+      userMessages: [],
     };
   },
   computed: {
@@ -105,6 +124,7 @@ export default {
       email: "userEmail",
       firstName: "userFirstName",
       lastName: "userLastName",
+      severity: "severity",
     }),
   },
   methods: {
@@ -114,6 +134,26 @@ export default {
       await this.updateProfile(values);
       this.updateProfileAction = false;
     },
+  },
+  mounted: function () {
+    this.severity = "";
+    const config = {
+      headers: { Authorization: `Bearer ${this.userToken}` },
+    };
+    try {
+      const response = axios
+        .get(
+          import.meta.env.VITE_API_URL + "/api/user_profile/messages",
+          config
+        )
+        .then((response) => {
+          console.log(response);
+          this.userMessages = response.data.user_messages;
+          console.log(this.userMessages);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   },
 };
 </script>

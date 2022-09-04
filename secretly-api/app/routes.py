@@ -165,7 +165,16 @@ def user_profile(currentUser):
             return helpers.json_response('Required data missing in POST request.', 'error', 400)
 
 
-# TODO - Admin Panel
+@app.route('/api/user_profile/messages', methods=['GET'])
+@token_required
+def get_messages(current_user):
+    try:
+        messages = models.Message.query.filter_by(user_id=current_user.id).all()
+
+        return helpers.json_response('', 'success', 200, user_messages=[message.serialized for message in messages])
+
+    except KeyError:
+        return helpers.json_response('Required data missing in POST request.', 'error', 400)
 
 @app.route('/api/new_message', methods=['POST'])
 @token_required
@@ -184,7 +193,7 @@ def new_message(current_user):
             passwd_hash = helpers.hash_password(password)
 
             # Create new Message instance and save data to database
-            new_message = models.Message(message_txt=message, passwd_hash=passwd_hash, user_id=current_user.id)
+            new_message = models.Message(message_txt=message, passwd_hash=passwd_hash, user_id=current_user.id, to_email=to_email)
             new_message.addToDB()
 
             # Send email with message.uuid

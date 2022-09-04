@@ -7,7 +7,7 @@ from sendgrid.helpers.mail import Mail, Email, To, Content
 
 # Generate JSON responses
 def json_response(response_msg, severity, status_code, msg_uuid=None,
-                  token=None, email=None, first_name=None, last_name=None):
+                  token=None, email=None, first_name=None, last_name=None, user_messages=None):
     response = make_response(
         jsonify(
             {
@@ -17,7 +17,8 @@ def json_response(response_msg, severity, status_code, msg_uuid=None,
                 'token': token,
                 'email': email,
                 'first_name': first_name,
-                'last_name': last_name
+                'last_name': last_name,
+                'user_messages': user_messages,
             }
         ),
         status_code
