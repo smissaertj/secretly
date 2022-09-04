@@ -21,7 +21,6 @@ export const useUserStore = defineStore("userStore", {
   },
   actions: {
     async authenticate(values) {
-      console.log(values);
       try {
         const response = await axios.post(
           import.meta.env.VITE_API_URL + "/api/login",
@@ -45,7 +44,6 @@ export const useUserStore = defineStore("userStore", {
       }
     },
     async updateProfile(values) {
-      console.log(values);
       const config = {
         headers: { Authorization: `Bearer ${this.token}` },
       };

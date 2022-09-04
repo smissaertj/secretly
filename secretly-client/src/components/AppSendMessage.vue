@@ -126,6 +126,7 @@ export default {
             // console.log(response.data);
             this.sendMsgAction = false;
             this.response = response.data;
+            setTimeout(() => window.location.reload(), 1000);
           });
       } catch (error) {
         this.sendMsgAction = false;

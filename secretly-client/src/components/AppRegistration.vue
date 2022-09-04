@@ -123,6 +123,7 @@ export default {
         );
         this.registerAction = false;
         this.response = response.data;
+        setTimeout(() => window.location.reload(), 3000);
       } catch (error) {
         // console.log(error);
         this.registerAction = false;
