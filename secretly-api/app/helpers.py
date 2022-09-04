@@ -6,14 +6,18 @@ from flask import make_response, jsonify
 from sendgrid.helpers.mail import Mail, Email, To, Content
 
 # Generate JSON responses
-def json_response(response_msg, severity, status_code, msg_uuid=None, token=None):
+def json_response(response_msg, severity, status_code, msg_uuid=None,
+                  token=None, email=None, first_name=None, last_name=None):
     response = make_response(
         jsonify(
             {
                 'response_msg': response_msg,
                 'severity': severity,
                 'msg_uuid': msg_uuid,
-                'token': token
+                'token': token,
+                'email': email,
+                'first_name': first_name,
+                'last_name': last_name
             }
         ),
         status_code

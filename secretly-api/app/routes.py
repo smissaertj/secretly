@@ -1,5 +1,6 @@
 import datetime
 import jwt
+import os
 from app import app, db, helpers, models
 from app.templates import emails
 from decouple import config
@@ -26,7 +27,7 @@ def token_required(f):
                 return helpers.json_response('Invalid Authentication Token!', 'error', 401)
 
             if not current_user.is_active:
-                return helpers.json_response('Account is deactivated!', 'error', 403)
+                return helpers.json_response('Account activation required.', 'error', 403)
 
         except Exception as e:
             return helpers.json_response(str(e), 'error', 500)
@@ -109,15 +110,15 @@ def login():
                         'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
                     }, app.config['SECRET_KEY'], "HS256")
 
-                    return helpers.json_response('Login successful!', 'success', 200, token=token)
+                    return helpers.json_response('Login successful!', 'success', 200, token=token, email=user.email,
+                                                 first_name=user.first_name, last_name=user.last_name)
 
             return helpers.json_response('Invalid email or password!', 'error', 401)
     except KeyError:
         return helpers.json_response('Required data missing in POST request.', 'error', 400)
 
 
-# TODO - User Profile
-@app.route('/api/user_profile', methods=['GET', 'POST'])
+@app.route('/api/user_profile', methods=['POST'])
 @token_required
 def user_profile(currentUser):
     content_type = request.headers.get('Content-Type')
@@ -133,10 +134,19 @@ def user_profile(currentUser):
                 email = data['email']
                 first_name = data['first_name']
                 last_name = data['last_name']
-                password = data['password'] if data['password'] else None
+                email_changed = False
+                # TODO - Fix optional password field
 
                 if currentUser.email != email:
+                    email_changed = True
                     currentUser.email = email
+                    currentUser.is_active = False
+                    currentUser.activation_uuid = os.urandom(8).hex()
+
+                    # Send account activation Link
+                    uuid = currentUser.activation_uuid
+                    content = emails.activation_email(uuid)
+                    helpers.send_mail(to_email=currentUser.email, subject='Activate your account.', content=content)
 
                 if currentUser.first_name != first_name:
                     currentUser.first_name = first_name
@@ -144,28 +154,15 @@ def user_profile(currentUser):
                 if currentUser.last_name != last_name:
                     currentUser.last_name = last_name
 
-                hash = helpers.hash_password(password)
-                if password != None and currentUser.passwd_hash != hash:
-                    currentUser.passwd_hash = hash
-
                 db.session.commit()
-                return helpers.json_response('Profile data updated.', 'success', 200)
+                if email_changed:
+                    return helpers.json_response('You\'re email was changed, please log out and check your inbox for the activation link.', 'success', 200)
+                else:
+                    return helpers.json_response('Profile data updated.', 'success', 200)
             else:
                 return helpers.json_response('Content-Type should be application/json', 'error', 400)
         except KeyError:
             return helpers.json_response('Required data missing in POST request.', 'error', 400)
-
-    # Retrieve User Data
-    if request.method == 'GET':
-        # user = models.User.query.filter_by(id=currentUser.id).first()
-        return make_response(jsonify({
-            'email': currentUser.email,
-            'first_name': currentUser.first_name,
-            'last_name': currentUser.last_name,
-            'severity': 'success'
-        }),
-            200
-        )
 
 
 # TODO - Admin Panel

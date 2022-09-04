@@ -4,7 +4,7 @@
     class="form-control mb-4 justify-center w-1/3"
     :validation-schema="registerSchema"
     @submit="register"
-    v-if="!response"
+    v-if="!response && !registerAction"
   >
     <vee-field
       name="email"
@@ -13,6 +13,19 @@
       class="input input-bordered text-center m-2"
     />
     <ErrorMessage class="text-red-600" name="email" />
+    <vee-field
+      name="firstName"
+      type="text"
+      placeholder="First Name"
+      class="input input-bordered text-center m-2"
+    />
+    <ErrorMessage class="text-red-600" name="firstName" />
+    <vee-field
+      name="lastName"
+      type="text"
+      placeholder="Last Name"
+      class="input input-bordered text-center m-2"
+    />
     <vee-field
       name="passwd"
       type="password"
@@ -32,9 +45,22 @@
     </button>
   </vee-form>
 
+  <!--  On registerAction-->
+  <div
+    class="alert alert-info shadow-lg w-1/3 mb-8 justify-center rounded"
+    v-else-if="registerAction"
+  >
+    <div>
+      <span
+        ><font-awesome-icon icon="fa-solid fa-spinner" class="mr-2 fa-2xl" />
+        Creating Account...</span
+      >
+    </div>
+  </div>
+
   <!--  On Success-->
   <div
-    class="alert alert-success shadow-lg w-1/3 mb-8 justify-center rounded"
+    class="alert alert-success shadow-lg w-1/2 mb-8 justify-center rounded"
     v-else-if="response.severity === 'success'"
   >
     <div>
@@ -71,17 +97,21 @@ export default {
     return {
       registerSchema: {
         email: "required|email",
+        firstName: "required",
+        lastName: "required",
         passwd: "required",
         confirmPasswd: "required|confirmed:@passwd",
       },
       response: "",
+      registerAction: false,
     };
   },
   methods: {
     async register(values) {
-      console.log(values);
+      // console.log(values);
 
       try {
+        this.registerAction = true;
         const response = await axios.post(
           import.meta.env.VITE_API_URL + "/api/signup",
           {
@@ -91,9 +121,11 @@ export default {
             password: values.passwd,
           }
         );
+        this.registerAction = false;
         this.response = response.data;
       } catch (error) {
-        console.log(error);
+        // console.log(error);
+        this.registerAction = false;
         this.response = error.response.data;
       }
     },
