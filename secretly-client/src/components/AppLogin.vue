@@ -4,7 +4,7 @@
     class="form-control mb-4 justify-center w-1/3"
     :validation-schema="loginSchema"
     @submit="login"
-    v-if="!response && !loginAction"
+    v-if="!loginAction && !userLoggedIn"
   >
     <vee-field
       name="email"
@@ -40,12 +40,12 @@
   <!--  On Success-->
   <div
     class="alert alert-success shadow-lg w-1/3 mb-8 justify-center rounded"
-    v-else-if="response.severity === 'success'"
+    v-if="severity === 'success' && !loginAction"
   >
     <div>
       <span
         ><font-awesome-icon icon="fa-solid fa-check" class="mr-2 fa-2xl" />
-        {{ response.response_msg }}</span
+        {{ response_msg }}</span
       >
     </div>
   </div>
@@ -53,7 +53,7 @@
   <!--  On Error-->
   <div
     class="alert alert-error shadow-lg w-1/2 mb-8 justify-center rounded"
-    v-else-if="response.severity === 'error'"
+    v-else-if="severity === 'error' && !loginAction"
   >
     <div>
       <span
@@ -61,7 +61,7 @@
           icon="fa-solid fa-circle-exclamation"
           class="mr-2 fa-2xl"
         />
-        {{ response.response_msg }}</span
+        {{ response_msg }}</span
       >
     </div>
   </div>
@@ -69,6 +69,8 @@
 
 <script>
 import axios from "axios";
+import { mapState, mapActions } from "pinia/dist/pinia";
+import { useUserStore } from "@/stores/userStore";
 
 export default {
   name: "AppLogin",
@@ -82,28 +84,20 @@ export default {
       loginAction: false,
     };
   },
+  computed: {
+    ...mapState(useUserStore, {
+      userLoggedIn: "userLoggedIn",
+      response_msg: "response_msg",
+      severity: "severity",
+    }),
+  },
   methods: {
+    ...mapActions(useUserStore, ["authenticate"]),
+
     async login(values) {
-      try {
-        this.loginAction = true;
-        const response = await axios.post(
-          import.meta.env.VITE_API_URL + "/api/login",
-          {
-            email: values.email,
-            password: values.passwd,
-          }
-        );
-        const token = response.data["token"];
-        this.loginAction = false;
-        this.response = response.data;
-        localStorage.setItem("secretlyUser", token);
-        setTimeout(function () {
-          location.reload();
-        }, 1000);
-      } catch (error) {
-        this.loginAction = false;
-        this.response = error.response.data;
-      }
+      this.loginAction = true;
+      await this.authenticate(values);
+      this.loginAction = false;
     },
   },
 };

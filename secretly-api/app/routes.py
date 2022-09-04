@@ -1,5 +1,6 @@
 import datetime
 import jwt
+import os
 from app import app, db, helpers, models
 from app.templates import emails
 from decouple import config
@@ -109,14 +110,19 @@ def login():
                         'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
                     }, app.config['SECRET_KEY'], "HS256")
 
-                    return helpers.json_response('Login successful!', 'success', 200, token=token)
+                    user_data = {
+                        'email': user.email,
+                        'firstName': user.first_name,
+                        'lastName': user.last_name,
+                    }
+
+                    return helpers.json_response('Login successful!', 'success', 200, token=token, user_data=user_data)
 
             return helpers.json_response('Invalid email or password!', 'error', 401)
     except KeyError:
         return helpers.json_response('Required data missing in POST request.', 'error', 400)
 
 
-# TODO - User Profile
 @app.route('/api/user_profile', methods=['GET', 'POST'])
 @token_required
 def user_profile(currentUser):
@@ -137,8 +143,15 @@ def user_profile(currentUser):
                 # TODO - Fix optional password field
 
                 if currentUser.email != email:
+                    email_changed = True
                     currentUser.email = email
-                    # TODO - Set account inactive and resend activation email
+                    currentUser.is_active = False
+                    currentUser.activation_uuid = os.urandom(8).hex()
+
+                    # Send account activation Link
+                    uuid = currentUser.activation_uuid
+                    content = emails.activation_email(uuid)
+                    helpers.send_mail(to_email=currentUser.email, subject='Activate your account.', content=content)
 
                 if currentUser.first_name != first_name:
                     currentUser.first_name = first_name
@@ -151,7 +164,10 @@ def user_profile(currentUser):
                     currentUser.passwd_hash = hash
 
                 db.session.commit()
-                return helpers.json_response('Profile data updated.', 'success', 200)
+                if email_changed:
+                    return helpers.json_response('Profile Updated. You\'re email was changed, check your inbox for the activation link.', 'success', 200)
+                else:
+                    return helpers.json_response('Profile data updated.', 'success', 200)
             else:
                 return helpers.json_response('Content-Type should be application/json', 'error', 400)
         except KeyError:
