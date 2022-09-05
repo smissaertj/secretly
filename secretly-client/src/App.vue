@@ -127,10 +127,10 @@ export default {
   },
   mounted() {
     const userStore = useUserStore();
-    this.userToken =
-      userStore.token !== "undefined" || userStore.token !== ""
-        ? userStore.token
-        : undefined;
+    this.userToken = userStore.token.length > 9 ? userStore.token : "";
+    // userStore.token !== "undefined" || userStore.token !== ""
+    //   ? userStore.token
+    //   : "";
   },
   computed: {
     ...mapWritableState(useUserStore, { userToken: "token" }),
