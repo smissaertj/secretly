@@ -117,6 +117,7 @@ export default {
         this.response = error.response.data;
         setTimeout(() => window.location.reload(), 3000);
       }
+      this.updateStats;
     },
   },
 };
