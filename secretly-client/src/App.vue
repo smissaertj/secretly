@@ -22,7 +22,9 @@
             @click.prevent="logout"
             >Logout</a
           >
-          <a class="btn btn-secondary">Instructions</a>
+          <a class="btn btn-secondary" @click.prevent="showInstructions"
+            >{{ instructions ? "Instructions" : "Home" }}
+          </a>
         </div>
       </div>
 
@@ -32,17 +34,17 @@
           <div class="stats shadow bg-base-300 mt-1">
             <div class="stat place-items-center">
               <div class="stat-title">Sent Messages</div>
-              <div class="stat-value text-accent">31K</div>
+              <div class="stat-value text-accent">5000</div>
             </div>
 
             <div class="stat place-items-center">
               <div class="stat-title">Read Messages</div>
-              <div class="stat-value text-accent">4,200</div>
+              <div class="stat-value text-accent">4200</div>
             </div>
 
             <div class="stat place-items-center">
               <div class="stat-title">Users</div>
-              <div class="stat-value text-accent">1,200</div>
+              <div class="stat-value text-accent">1200</div>
             </div>
           </div>
         </div>
@@ -123,6 +125,7 @@ export default {
     return {
       tab: "readMsg",
       profile: false,
+      instructions: false,
     };
   },
   mounted() {
@@ -142,6 +145,10 @@ export default {
     },
     showProfile() {
       this.profile = !this.profile;
+    },
+    showInstructions() {
+      this.instructions = !this.instructions;
+      console.log(this.instructions);
     },
   },
 };
