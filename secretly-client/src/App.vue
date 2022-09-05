@@ -22,9 +22,6 @@
             @click.prevent="logout"
             >Logout</a
           >
-          <a class="btn btn-secondary" @click.prevent="showInstructions"
-            >{{ instructions ? "Instructions" : "Home" }}
-          </a>
         </div>
       </div>
 
@@ -50,7 +47,7 @@
         </div>
       </div>
       <div class="grid card bg-base-300 place-items-center mt-2">
-        <template v-if="!profile">
+        <template v-if="!profile && !instructions">
           <div class="tabs mt-2">
             <a
               class="tab tab-bordered"
@@ -77,7 +74,7 @@
           <AppSendMessage v-if="userToken && tab == 'sendMsg'" />
           <AppRegistration v-if="tab == 'register'" />
         </template>
-        <AppProfile v-else />
+        <AppProfile v-else-if="profile && !instructions" />
       </div>
 
       <footer
@@ -109,7 +106,7 @@ import AppLogin from "@/components/AppLogin.vue";
 import AppRegistration from "@/components/AppRegistration.vue";
 import AppSendMessage from "@/components/AppSendMessage.vue";
 import AppProfile from "@/components/AppProfile.vue";
-import { mapState, mapWritableState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useUserStore } from "@/stores/userStore";
 
 export default {
@@ -145,10 +142,6 @@ export default {
     },
     showProfile() {
       this.profile = !this.profile;
-    },
-    showInstructions() {
-      this.instructions = !this.instructions;
-      console.log(this.instructions);
     },
   },
 };
