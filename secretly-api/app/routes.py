@@ -243,3 +243,15 @@ def read_message():
     except KeyError:
         print(request.get_json())
         return helpers.json_response('Required data missing in POST request.', 'error', 400)
+
+@app.route('/api/update_stats', methods=['GET'])
+def update_stats():
+    users = db.session.query(models.User).count()
+    messages = db.session.query(models.Message).count()
+    readMessages = db.session.query(models.Message).filter_by(is_read=True).count()
+    data = {
+        'sentMessages': messages,
+        'readMessages': readMessages,
+        'users': users,
+    }
+    return make_response(jsonify(data), 200)
