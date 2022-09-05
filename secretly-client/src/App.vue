@@ -12,13 +12,13 @@
         <div class="navbar-end">
           <a
             class="btn btn-link normal-case"
-            v-show="userToken"
+            v-if="userToken != 'undefined' || userToken != ''"
             @click.prevent="showProfile"
             >{{ profile ? "App" : "Profile" }}</a
           >
           <a
             class="btn btn-link normal-case"
-            v-show="userToken"
+            v-if="userToken != 'undefined' || userToken != ''"
             @click.prevent="logout"
             >Logout</a
           >
@@ -107,7 +107,7 @@ import AppLogin from "@/components/AppLogin.vue";
 import AppRegistration from "@/components/AppRegistration.vue";
 import AppSendMessage from "@/components/AppSendMessage.vue";
 import AppProfile from "@/components/AppProfile.vue";
-import { mapWritableState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useUserStore } from "@/stores/userStore";
 
 export default {
@@ -128,14 +128,16 @@ export default {
   mounted() {
     const userStore = useUserStore();
     this.userToken =
-      userStore.token !== "undefined" ? userStore.token : undefined;
+      userStore.token !== "undefined" || userStore.token !== ""
+        ? userStore.token
+        : undefined;
   },
   computed: {
     ...mapWritableState(useUserStore, { userToken: "token" }),
   },
   methods: {
     logout() {
-      this.userToken = undefined;
+      this.userToken = "";
       window.location.reload();
     },
     showProfile() {
