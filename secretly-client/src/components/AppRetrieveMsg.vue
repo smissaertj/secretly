@@ -107,6 +107,7 @@ export default {
       } catch (error) {
         this.retrieveMsgAction = false;
         this.response = error.response.data;
+        setTimeout(() => window.location.reload(), 3000);
       }
     },
   },
