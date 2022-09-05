@@ -77,6 +77,8 @@
 
 <script>
 import axios from "axios";
+import { mapActions } from "pinia";
+import { useStatStore } from "@/stores/statStore.js";
 
 export default {
   name: "AppRetrieveMsg",
@@ -89,6 +91,12 @@ export default {
       response: "",
       retrieveMsgAction: false,
     };
+  },
+  computed: {
+    ...mapActions(useStatStore, ["updateStats"]),
+  },
+  mounted() {
+    this.updateStats;
   },
   methods: {
     async retrieveMsg(values) {

@@ -26,26 +26,7 @@
       </div>
 
       <!--      Main Content-->
-      <div class="flex flex-col w-full border-opacity-50 my-auto mt-5">
-        <div class="grid card bg-base-300 rounded-box place-items-center mb-2">
-          <div class="stats shadow bg-base-300 mt-1">
-            <div class="stat place-items-center">
-              <div class="stat-title">Sent Messages</div>
-              <div class="stat-value text-accent">5000</div>
-            </div>
-
-            <div class="stat place-items-center">
-              <div class="stat-title">Read Messages</div>
-              <div class="stat-value text-accent">4200</div>
-            </div>
-
-            <div class="stat place-items-center">
-              <div class="stat-title">Users</div>
-              <div class="stat-value text-accent">1200</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <AppStats />
       <div class="grid card bg-base-300 place-items-center mt-2">
         <template v-if="!profile && !instructions">
           <div class="tabs mt-2">
@@ -101,6 +82,7 @@
 </template>
 
 <script>
+import AppStats from "@/components/AppStats.vue";
 import AppRetrieveMsg from "@/components/AppRetrieveMsg.vue";
 import AppLogin from "@/components/AppLogin.vue";
 import AppRegistration from "@/components/AppRegistration.vue";
@@ -112,6 +94,7 @@ import { useUserStore } from "@/stores/userStore";
 export default {
   name: "App",
   components: {
+    AppStats,
     AppRetrieveMsg,
     AppLogin,
     AppRegistration,
