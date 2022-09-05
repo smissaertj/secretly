@@ -12,13 +12,13 @@
         <div class="navbar-end">
           <a
             class="btn btn-link normal-case"
-            v-if="userToken != 'undefined' || userToken != ''"
+            v-if="userToken"
             @click.prevent="showProfile"
             >{{ profile ? "App" : "Profile" }}</a
           >
           <a
             class="btn btn-link normal-case"
-            v-if="userToken != 'undefined' || userToken != ''"
+            v-if="userToken"
             @click.prevent="logout"
             >Logout</a
           >
