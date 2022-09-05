@@ -13,5 +13,7 @@ RUN pip3 install -r requirements.txt
 # Copy the files
 COPY . .
 
-# Executable commands
-CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+# configure the container to run in an executed manner
+ENTRYPOINT [ "python" ]
+
+CMD ["app.py" ]

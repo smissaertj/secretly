@@ -2,4 +2,4 @@ from decouple import config
 from app import app
 
 if __name__ == '__main__':
-    app.run(debug=config('DEBUG'), port=config('PORT'))
+    app.run(debug=config('DEBUG'))
