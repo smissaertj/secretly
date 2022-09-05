@@ -2,6 +2,7 @@
 ## Developers Institute - Hackathon #2
 A VueJS / Flask web application to send password protected messages to a 3rd party.
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/038c1a83-f4b5-4b9d-9bb0-20ebc3f1e654/deploy-status)](https://app.netlify.com/sites/cool-as-code-secretly/deploys)  
 Demo: https://secretly.joeri.xyz/
 
 *Usage Instructions:*
@@ -53,7 +54,7 @@ source venv/bin/activate
 pip3 install -r secretly-api/requirements.txt
 ```
 
-### Compile and Hot-Reload for Development
+### Run Development Server
 
 ```sh
 python3 secretly-api/app.py

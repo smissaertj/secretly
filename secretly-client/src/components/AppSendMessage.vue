@@ -85,10 +85,9 @@
 
 <script>
 import axios from "axios";
-import { mapState } from "pinia";
+import { mapState, mapActions } from "pinia";
 import { useUserStore } from "@/stores/userStore";
 import { useStatStore } from "@/stores/statStore.js";
-import { mapActions } from "pinia/dist/pinia";
 export default {
   name: "AppSendMessage",
   data() {
