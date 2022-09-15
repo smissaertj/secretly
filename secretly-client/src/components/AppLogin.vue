@@ -32,7 +32,10 @@
   >
     <div>
       <span
-        ><font-awesome-icon icon="fa-solid fa-spinner" class="mr-2 fa-2xl" />
+        ><font-awesome-icon
+          icon="fa-solid fa-spinner"
+          class="fa-spin mr-2 fa-2xl"
+        />
         Logging in...</span
       >
     </div>
